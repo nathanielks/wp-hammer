@@ -5,6 +5,7 @@ namespace WP_CLI\Sweep;
 use WP_CLI;
 use WP_CLI\CommandWithDBObject;
 use WP_CLI\Sweep\prune as Prune;
+use WP_CLI\Sweep\formats as Formats;
 
 /**
  * wp sweep is a command to sweep your environment and prepare it for a staging / development environment.
@@ -81,15 +82,13 @@ class command extends CommandWithDBObject {
 		WP_CLI::success( $wpdb->prefix );
 		if ( false !== $this->limits ) {
 			$prune = new Prune( $this->limits, $this->dry_run );
-			$prune->prune();
-
+			$prune->run();
 		}
 		/*
-		var_dump( $this->tables );
-		var_dump( $this->formats );
-		var_dump( $this->limits );
-		var_dump( $this->dry_run );
-		*/
+		if ( false !== $this->formats ) {
+			$formats = new Formats( $this->formats, $this->dry_run );
+			$formats->run();
+		}*/
 	}
 }
 

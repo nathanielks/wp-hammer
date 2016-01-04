@@ -11,7 +11,6 @@ class prune {
 	function __construct( $limits, $dry_run ) {
 		$this->dry_run = $dry_run;
 		$this->parse_limits( $limits );
-		$this->run();
 	}
 
 	function parse_limits( $limits ) {
