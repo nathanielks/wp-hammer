@@ -17,7 +17,6 @@ class content_formatter {
 		$this->formatters = array();
 		foreach( $formatters as $formatter ) {
 			$options = explode( '.', $formatter, 2 );
-			var_dump( $options );
 			// Check we have table.column=type set
 			if ( 2 === count( $options ) ) {
 				$table = $options[0];
