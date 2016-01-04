@@ -1,10 +1,16 @@
 <?php
 
+namespace WP_CLI\Sweep;
+
+use WP_CLI;
+use WP_CLI\CommandWithDBObject;
+use WP_CLI\Sweep\prune as Prune;
+
 /**
  * wp sweep is a command to sweep your environment and prepare it for a staging / development environment.
  *
  */
-class WP_Sweep extends WP_CLI_Command {
+class command extends CommandWithDBObject {
 
 	protected $tables;
 	protected $formats;
@@ -69,13 +75,21 @@ class WP_Sweep extends WP_CLI_Command {
 
 	function run() {
 		global $wpdb;
+		if ( $this->dry_run ) {
+			WP_CLI::line( 'Dry run enabled, not modifying the database' );
+		}
 		WP_CLI::success( $wpdb->prefix );
+		if ( false !== $this->limits ) {
+			$prune = new Prune( $this->limits, $this->dry_run );
+			$prune->prune();
+
+		}
+		/*
 		var_dump( $this->tables );
 		var_dump( $this->formats );
 		var_dump( $this->limits );
 		var_dump( $this->dry_run );
-		var_dump( get_editable_roles() );
+		*/
 	}
 }
 
-WP_CLI::add_command( 'sweep', 'WP_Sweep' );

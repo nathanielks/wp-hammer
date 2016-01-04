@@ -1,5 +1,5 @@
 Usage is best explained with an example, which we'll break down in parts as the syntax is fairly powerful
-wp sweep --dry-run -t users,posts.post_author,posts.post_content,posts.post_title -f posts.post_author=random users.user_pass=auto users.user_email='ivan.k+__ID__@10up.com' posts.post_title=ipsum posts.post_content=markov -l users=10 posts=100.post_date
+wp sweep --dry-run -t users,posts.post_author,posts.post_content,posts.post_title -f posts.post_author=random,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum posts.post_content=markov -l users=10,posts=100.post_date
 
 wp sweep
 How you invoke the command
