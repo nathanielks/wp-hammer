@@ -37,9 +37,10 @@ class prune {
 
 	function run() {
 		do_action( 'wp_sweep_before_run_limits' );
+		WP_CLI::line( "Running content limiters" );
 		foreach ( $this->limits as $table => $limit )     {
 			if ( $this->dry_run ) {
-				WP_CLI::line( "Dry run $table" );
+				WP_CLI::line( "Dry run limit for $table" );
 			} else {
 				WP_CLI::line( "Limit run for table: $table" );
 				do_action( 'wp_sweep_run_limit_' . $table, $limit[ 'limit' ], $limit[ 'sort_type' ] );
