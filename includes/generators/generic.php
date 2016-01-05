@@ -4,6 +4,7 @@ namespace WP_CLI\Sweep\Generators\Generic;
 use WP_CLI\Iterators\Query;
 use joshtronic\LoremIpsum;
 use PWGen;
+use MarkovPHP\WordChain;
 
 /**
  * Lorem Ipsum content generator
@@ -40,15 +41,42 @@ function random( $length ) {
 
 /**
  * Markov chain content generator
- * @param $length
+ * @param $length number of words
  *
- * @return string
+ * @return string generated string
  */
-function markov( $length, $table ) {
+function markov( $length, $table, $column ) {
+	$sample = get_content_for_table_column( $table, $column );
 	$content = '';
 	if ( $length > 0 ) {
-		while ( $length -- > 0 ) {
-			$content .= 'markov';
+		$chain = new WordChain( $sample, $length );
+		$content = $chain->generate( $length );
+	}
+	return $content;
+}
+
+/**
+ * Fetch all content for $wpdb->prefix_$table.$column for using as a sample pool for markov chains
+ * @param $table table name
+ * @param $column column name
+ *
+ * @return string content of the column in the table
+ */
+function get_content_for_table_column( $table, $column ) {
+	$transient_key = "wp_sweep_table_content_{$table}_{$column}";
+	$content = get_transient( $transient_key );
+	if ( false === $content ) {
+		global $wpdb;
+		$query   = "SELECT $column FROM $wpdb->prefix{$table}";
+		$results = new Query( $query );
+		$content = '';
+		while ( $results->valid() ) {
+			$content .= $results->current()->{$column};
+			$results->next();
+
+		}
+		if ( strlen( $content ) ) {
+			set_transient( $transient_key, $content, 300 );
 		}
 	}
 	return $content;

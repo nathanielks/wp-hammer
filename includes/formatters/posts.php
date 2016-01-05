@@ -91,7 +91,7 @@ function column_content( $post, $formatter, $column ) {
 			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\ipsum( $limits[ 'ipsum' ] );
 			break;
 		case 'markov':
-			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\markov( $limits[ 'markov' ], $column );
+			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\markov( $limits[ 'markov' ], 'posts', $column );
 			break;
 		case 'random':
 			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\random( $limits[ 'random' ], $column );

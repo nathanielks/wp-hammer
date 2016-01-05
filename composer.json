@@ -3,7 +3,8 @@
     "description": "WP CLI Command to sanitize an environment for dev/test/stage purposes",
     "require": {
         "joshtronic/php-loremipsum": "dev-master",
-        "roderik/pwgen-php": "dev-master"
+        "roderik/pwgen-php": "dev-master",
+        "heidilabs/markov-php": "dev-master"
     },
     "license": "GPL-2.0+",
     "authors": [
