@@ -1,0 +1,14 @@
+{
+    "name": "ivankruchkoff/wp-sweep",
+    "description": "WP CLI Command to sanitize an environment for dev/test/stage purposes",
+    "require": {
+        "joshtronic/php-loremipsum": "dev-master"
+    },
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Ivan Kruchkoff",
+            "email": "ivan@kruchkoff.com"
+        }
+    ]
+}

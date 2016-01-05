@@ -16,7 +16,7 @@ function users( $formatters ) {
 		$modified_user = (array) $users->current();
 
 		foreach( $formatters['users'] as $column => $formatter ) {
-			$modified_user = apply_filters( 'wp_sweep_run_formatter_users_' . $column, $modified_user, $formatter );
+			$modified_user = apply_filters( 'wp_sweep_run_formatter_filter_users_' . $column, $modified_user, $formatter );
 		}
 
 		$modified = array_diff( $modified_user, $original_user ) ;
@@ -61,6 +61,9 @@ function user_email( $user, $formatter ) {
  * @return mixed
  */
 function user_pass( $user, $formatter ) {
+	if( is_null( $formatter ) ) {
+		debug_print_backtrace();
+	}
 	if ( 'auto' === $formatter ) {
 		$new_password = bin2hex( mcrypt_create_iv( 12, MCRYPT_DEV_URANDOM ) );
 		\WP_CLI::line( "New password for user {$user[ 'ID' ]} is {$new_password}" );
@@ -69,6 +72,6 @@ function user_pass( $user, $formatter ) {
 	return $user;
 }
 
-add_filter( 'wp_sweep_run_formatter_users_user_email', __NAMESPACE__ . '\user_email', null , 2 );
-add_filter( 'wp_sweep_run_formatter_users_user_pass', __NAMESPACE__ . '\user_pass', null , 2 );
+add_filter( 'wp_sweep_run_formatter_filter_users_user_email', __NAMESPACE__ . '\user_email', null , 2 );
+add_filter( 'wp_sweep_run_formatter_filter_users_user_pass', __NAMESPACE__ . '\user_pass', null , 2 );
 add_action( 'wp_sweep_run_formatter_users', __NAMESPACE__ . '\users' );

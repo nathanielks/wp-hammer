@@ -13,6 +13,7 @@ if ( ! defined('WP_CLI') || ! WP_CLI ) {
 }
 
 require_once 'autoload.php';
+require_once 'vendor/autoload.php';
 
 // All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
 // the autoloader for them.
