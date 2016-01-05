@@ -3,6 +3,10 @@
 namespace WP_CLI\Sweep\Formatters\Users;
 use WP_CLI\Iterators\Query;
 
+/**
+ * Action to be run for manipulating users table, all formatters are passed as a parameter.
+ * @param $formatters All formatters for all tables
+ */
 function users( $formatters ) {
 	global $wpdb;
 	$users_query = "SELECT * FROM $wpdb->users";
@@ -29,16 +33,20 @@ function users( $formatters ) {
 		}
 		$users->next();
 	}
-
-
 }
 
+/**
+ * @param $user WP_User_Query user object
+ * @param $formatter String for email, with other columns substituted with __COLUMN_NAME__
+ *
+ * @return mixed
+ */
 function user_email( $user, $formatter ) {
 	preg_match_all( '/__([a-zA-Z0-9-_]*)__/', $formatter, $matches );
 	if ( is_array( $matches ) && 2 === count( $matches ) ) {
 		foreach( $matches[1] as $match ) {
 			if ( isset( $user[ $match ] ) ) {
-				$formatter = str_replace( "__ID__", $user[ $match ], $formatter );
+				$formatter = str_replace( "__{$match}__", $user[ $match ], $formatter );
 			}
 		}
 		$user[ 'user_email' ] = $formatter;
@@ -46,6 +54,12 @@ function user_email( $user, $formatter ) {
 	return $user;
 }
 
+/**
+ * @param $user WP_User_Query user object
+ * @param $formatter password generating format auto = auto generated passwords.
+ *
+ * @return mixed
+ */
 function user_pass( $user, $formatter ) {
 	if ( 'auto' === $formatter ) {
 		$new_password = bin2hex( mcrypt_create_iv( 12, MCRYPT_DEV_URANDOM ) );

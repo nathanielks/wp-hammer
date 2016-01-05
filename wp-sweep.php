@@ -12,9 +12,11 @@ if ( ! defined('WP_CLI') || ! WP_CLI ) {
 	return;
 }
 
-$content_manipulators = glob( __DIR__ . '/includes/{pruners,formatters,generators}/*.php', GLOB_BRACE);
-
 require_once 'autoload.php';
+
+// All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
+// the autoloader for them.
+$content_manipulators = glob( __DIR__ . '/includes/{pruners,formatters,generators}/*.php', GLOB_BRACE);
 
 foreach ( $content_manipulators as $content_manipulator ) {
 	require_once $content_manipulator;

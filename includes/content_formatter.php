@@ -13,6 +13,9 @@ class content_formatter {
 		$this->parse_formatters( $formatters );
 	}
 
+	/**
+	 * @param $formatters Formatters as supplied on command line, parsed and processed via add_formatter
+	 */
 	function parse_formatters( $formatters ) {
 		$this->formatters = array();
 		foreach( $formatters as $formatter ) {
@@ -28,6 +31,11 @@ class content_formatter {
 		}
 	}
 
+	/**
+	 * @param $table e.g. users (for wp_users, prefix automatically substituted)
+	 * @param $column e.g. user_email (for users.user_email)
+	 * @param $generator which method of content generation is supported for this field
+	 */
 	function add_formatter( $table, $column, $generator ) {
 		$formatters = is_array( $this->formatters ) ? $this->formatters : array();
 		$formatters[ $table ] = isset( $formatters[ $table ] ) && is_array( $formatters[ $table ] ) ? $formatters[ $table ] : array();
@@ -35,6 +43,9 @@ class content_formatter {
 		$this->formatters = $formatters;
 	}
 
+	/**
+	 * Process all generator actions.
+	 */
 	function run() {
 		do_action( 'wp_sweep_before_run_formatter' );
 		WP_CLI::line( "Running content formatters" );

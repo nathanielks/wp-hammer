@@ -2,6 +2,10 @@
 
 namespace WP_CLI\Sweep\Pruners\Users;
 
+/**
+ * @param            $limit      How many users to keep
+ * @param bool|false $sort_type  How to determine which users to keep
+ */
 function pruner( $limit, $sort_type = false ) {
 	$roles = array_keys( get_editable_roles() );
 	$user_ids_by_role = array();
