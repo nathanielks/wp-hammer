@@ -3,6 +3,7 @@
 namespace WP_CLI\Sweep\Generators\Generic;
 use WP_CLI\Iterators\Query;
 use joshtronic\LoremIpsum;
+use PWGen;
 
 /**
  * Lorem Ipsum content generator
@@ -24,13 +25,17 @@ function ipsum( $length ) {
  * @return string random string of content
  */
 function random( $length ) {
+	$random = new PWGen();
+	$random->setNumerals( false );
+	$random->setCapitalize( false );
 	$content = '';
 	if ( $length > 0 ) {
 		while ( $length -- > 0 ) {
-			$content .= 'r';
+			$random->setLength( rand( 4, 8 ) );
+			$content .= $random->generate() . ' ';
 		}
 	}
-	return $content;
+	return rtrim( $content );
 }
 
 /**

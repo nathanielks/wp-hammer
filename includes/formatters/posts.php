@@ -9,7 +9,7 @@ use WP_CLI\Iterators\Query;
  */
 function posts( $formatters ) {
 	global $wpdb;
-	$posts_query = "SELECT * FROM $wpdb->posts";
+	$posts_query = "SELECT * FROM $wpdb->posts where post_type in ( 'post', 'page' )";
 	$posts = new Query( $posts_query );
 	while ( $posts->valid() ) {
 		$original_post = (array) $posts->current();
@@ -92,6 +92,9 @@ function column_content( $post, $formatter, $column ) {
 			break;
 		case 'markov':
 			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\markov( $limits[ 'markov' ], $column );
+			break;
+		case 'random':
+			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\random( $limits[ 'random' ], $column );
 			break;
 		default:
 			$post[ $column ] = apply_filters( "wp_sweep_run_formatter_filter_posts_{$column}_{$formatter}", $formatter );
