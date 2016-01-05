@@ -7,7 +7,7 @@ use PWGen;
 
 /**
  * Lorem Ipsum content generator
- * @param $length
+ * @param $length number of words
  *
  * @return string of ipsum text of specified length
  */
@@ -20,7 +20,7 @@ function ipsum( $length ) {
 
 /**
  * Random string content generator
- * @param $length
+ * @param $length number of words
  *
  * @return string random string of content
  */
@@ -31,7 +31,7 @@ function random( $length ) {
 	$content = '';
 	if ( $length > 0 ) {
 		while ( $length -- > 0 ) {
-			$random->setLength( rand( 4, 8 ) );
+			$random->setLength( rand( 4, 8 ) ); // Generate words of 4-8 chars
 			$content .= $random->generate() . ' ';
 		}
 	}
