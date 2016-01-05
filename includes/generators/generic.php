@@ -76,7 +76,7 @@ function get_content_for_table_column( $table, $column ) {
 
 		}
 		if ( strlen( $content ) ) {
-			set_transient( $transient_key, $content, 300 );
+			set_transient( $transient_key, $content, 30 );
 		}
 	}
 	return $content;

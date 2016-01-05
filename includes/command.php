@@ -79,12 +79,12 @@ class command extends CommandWithDBObject {
 		if ( $this->dry_run ) {
 			WP_CLI::line( 'Dry run enabled, not modifying the database' );
 		}
-		WP_CLI::success( $wpdb->prefix );
-		if ( false !== $this->limits ) {
+		if ( false !== $this->limits && ! is_null( $this->limits ) ) {
+			var_dump( $this->limits );die();
 			$prune = new Prune( $this->limits, $this->dry_run );
 			$prune->run();
 		}
-		if ( false !== $this->formats ) {
+		if ( false !== $this->formats && ! is_null( $this->formats ) ) {
 			$formats = new ContentFormatter( $this->formats, $this->dry_run );
 			$formats->run();
 		}

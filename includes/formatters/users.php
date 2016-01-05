@@ -68,6 +68,9 @@ function user_pass( $user, $formatter ) {
 		$new_password = bin2hex( mcrypt_create_iv( 12, MCRYPT_DEV_URANDOM ) );
 		\WP_CLI::line( "New password for user {$user[ 'ID' ]} is {$new_password}" );
 		$user[ 'user_pass' ] = wp_hash_password( $new_password );
+	} else {
+		\WP_CLI::line( "New password for user {$user[ 'ID' ]} is {$formatter}" );
+		$user[ 'user_pass' ] = wp_hash_password( $formatter );
 	}
 	return $user;
 }
