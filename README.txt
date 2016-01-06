@@ -1,7 +1,7 @@
 Before you do anything, composer install, to fetch the dependencies
 
 Usage is best explained with an example, which we'll break down in parts as the syntax is fairly powerful
-wp sweep --dry-run -f posts.post_author=random,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum posts.post_content=markov -l users=10,posts=100.post_date
+wp sweep --dry-run -f posts.post_author=random,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
 
 wp sweep
 How you invoke the command
@@ -24,3 +24,9 @@ posts=page.100.postdate,post.50.post_content.length we keep the following posts:
  post type = page, 100 posts sorted by postdate, descending
  post type = post, 50 posts with the longest post_content
 
+
+Another example
+
+wp db import production.sql
+wp sweep posts.post_author=random,users.user_pass=XGRwPjb7uFD5de23,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10
+wp db export sweep.sql
