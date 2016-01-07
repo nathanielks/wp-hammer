@@ -7,6 +7,7 @@ namespace WP_CLI\Sweep\Pruners\Users;
  * @param bool|false $sort_type  How to determine which users to keep
  */
 function pruner( $limit, $sort_type = false ) {
+	\WP_CLI::line( "Fetching all users for removing all but $limit. This could take a while." );
 	$roles = array_keys( get_editable_roles() );
 	$user_ids_by_role = array();
 	$total_users = 0;
@@ -46,9 +47,10 @@ function pruner( $limit, $sort_type = false ) {
 			require_once( ABSPATH . 'wp-admin/includes/user.php' );
 
 			foreach( $users_to_delete->results as $user_to_delete ) {
-				\WP_CLI::line( "Deleting user {$user_to_delete->ID} " );
+				$new_author_id = min( $keep_ids );
+				\WP_CLI::line( "Deleting user {$user_to_delete->ID} and reassigning their posts to user ID: $new_author_id" );
 				// Delete user and reassign their posts to the smallest user ID that will remain.
-				wp_delete_user( $user_to_delete->ID, min( $keep_ids) );
+				wp_delete_user( $user_to_delete->ID, $new_author_id );
 			}
 		}
 
