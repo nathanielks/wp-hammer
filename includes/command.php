@@ -115,6 +115,7 @@ class Command extends CommandWithDBObject {
 	 * Execute the WP Sweep command.
 	 */
 	function run() {
+		ob_end_flush();
 		global $wpdb;
 		if ( $this->dry_run ) {
 			WP_CLI::line( 'Dry run enabled, not modifying the database' );
@@ -127,6 +128,7 @@ class Command extends CommandWithDBObject {
 			$formats = new ContentFormatter( $this->formats, $this->dry_run );
 			$formats->run();
 		}
+		ob_start();
 	}
 }
 
