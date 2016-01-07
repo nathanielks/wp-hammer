@@ -4,14 +4,14 @@ namespace WP_CLI\Sweep;
 
 use WP_CLI;
 use WP_CLI\CommandWithDBObject;
-use WP_CLI\Sweep\prune as Prune;
-use WP_CLI\Sweep\content_formatter as ContentFormatter;
+use WP_CLI\Sweep\Prune;
+use WP_CLI\Sweep\ContentFormatter;
 
 /**
  * wp sweep is a command to sweep your environment and prepare it for a staging / development environment.
  *
  */
-class command extends CommandWithDBObject {
+class Command extends CommandWithDBObject {
 
 	/**
 	 * @var array of tables and columns which should have their content modified, and HOW it should be modified.
@@ -42,13 +42,29 @@ class command extends CommandWithDBObject {
 	 */
 	protected $dry_run = false;
 
-
 	/**
-	 * Call with wp sweep, no need for additional commands, only parameters per README
-	 * @param $args
-	 * @param $assoc_args
+	 * Clean up your site to remove data such as password hashes and email addresses.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [-f <format1>,<format2>,...<formatN>]
+	 * : Which tables and/or columns to process and how to generate the new content.
+	 *
+	 * [-l <limit1>,<limit2>,...<limitN>]
+	 * : Which tables to limit, the maximum number of rows to keep and the method of determining which rows to keep.
+	 *
+	 * [--dry-run]
+	 * : Whether or not we actually make any changes to the database.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp sweep -l users=5
+	 *     wp sweep -f posts.post_author=random,users.user_pass=auto,users.user_email='test+user__ID__@example.com'
+	 *     wp sweep --dry-run -f posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
+	 *
+	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>] [<--dry-run>]
 	 */
-	function __invoke( $args, $assoc_args ) {
+	function __invoke( $args = array(), $assoc_args = array() ) {
 		do_action( 'wp_sweep_before_parse_arguments', $args, $assoc_args );
 		$this->parse_arguments( $args, $assoc_args );
 		do_action( 'wp_sweep_after_parse_arguments', $args, $assoc_args );
@@ -95,6 +111,9 @@ class command extends CommandWithDBObject {
 
 	}
 
+	/**
+	 * Execute the WP Sweep command.
+	 */
 	function run() {
 		global $wpdb;
 		if ( $this->dry_run ) {

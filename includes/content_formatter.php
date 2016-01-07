@@ -3,7 +3,7 @@ namespace WP_CLI\Sweep;
 
 use WP_CLI;
 
-class content_formatter {
+class ContentFormatter {
 
 	protected $dry_run;
 	protected $formatters;

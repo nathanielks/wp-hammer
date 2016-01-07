@@ -6,6 +6,12 @@
         "roderik/pwgen-php": "dev-master",
         "heidilabs/markov-php": "dev-master"
     },
+    "autoload": {
+        "psr-4": {
+            "WP_CLI\\Sweep\\": "includes/"
+        },
+        "files": [ "wp-sweep.php" ]
+    },
     "license": "GPL-2.0+",
     "authors": [
         {

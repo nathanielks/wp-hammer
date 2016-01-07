@@ -3,7 +3,7 @@ namespace WP_CLI\Sweep;
 
 use WP_CLI;
 
-class prune {
+class Prune {
 
 	protected $dry_run;
 	protected $limits;

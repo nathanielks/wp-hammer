@@ -12,7 +12,7 @@ if ( ! defined('WP_CLI') || ! WP_CLI ) {
 	return;
 }
 
-require_once 'autoload.php';
+// require_once 'autoload.php';
 require_once 'vendor/autoload.php';
 
 // All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
@@ -23,4 +23,4 @@ foreach ( $content_manipulators as $content_manipulator ) {
 	require_once $content_manipulator;
 }
 
-WP_CLI::add_command( 'sweep', 'WP_CLI\Sweep\command' );
+WP_CLI::add_command( 'sweep', 'WP_CLI\Sweep\Command' );
