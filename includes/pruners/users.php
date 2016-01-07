@@ -56,4 +56,4 @@ function pruner( $limit, $sort_type = false ) {
 
 }
 
-add_action( 'wp_sweep_run_limit_users', __NAMESPACE__ . '\pruner' );
+add_action( 'wp_sweep_run_prune_users', __NAMESPACE__ . '\pruner' );
