@@ -37,7 +37,7 @@ class Prune {
 
 	function run() {
 		do_action( 'wp_sweep_before_run_prunes' );
-		WP_CLI::line( "Running content pruneers" );
+		WP_CLI::line( "Running content limiters" );
 		foreach ( $this->prunes as $table => $prune )     {
 			if ( $this->dry_run ) {
 				WP_CLI::line( "Dry run prune for $table" );

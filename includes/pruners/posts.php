@@ -23,8 +23,8 @@ function pruner( $limit, $sort_type = false ) {
 		if ( ! in_array( $post_type, apply_filters( 'wp_sweep_prune_post_types_to_completely_remove', array( 'revision' ) ) ) ) {
 			$post_ids_by_type[ $post_type ] = isset( $post_ids_by_type[ $post_type ] ) ? $post_ids_by_type[ $post_type ] : array();
 			$post_ids_by_type[ $post_type ][] = $post_id;
-			$post_ids[] = $post_id;
 		}
+		$post_ids[] = $post_id;
 		$posts->next();
 	}
 
@@ -46,18 +46,56 @@ function pruner( $limit, $sort_type = false ) {
 	}
 
 
-	$deleted_posts_count = 0;
 	\WP_CLI::line( "Deleting " . ( max( $total_posts - $limit, 0 ) ) . " posts" );
-	foreach( $post_ids as $post_id ) {
-		if ( ! in_array( $post_id, $keep_ids ) ) {
-			$deleted_post = wp_delete_post( $post_id, true );
-			if ( false !== $deleted_post ) {
-				\WP_CLI::line( "Deleted post with ID $post_id, type {$deleted_post->post_type}, title {$deleted_post->post_title}" );
-				$deleted_posts_count++;
-			}
-		}
+	$post_ids_to_delete = array_diff( $post_ids, $keep_ids );
+	if ( 'query' === apply_filters( 'wp_sweep_prune_post_types_delete_method ', 'query' ) ) {
+		$deleted_posts_count = delete_posts_sql( $post_ids_to_delete, $keep_ids );
+	} else {
+		$deleted_posts_count = delete_posts_wp( $post_ids_to_delete );
 	}
 	\WP_CLI::line( "Deleted $deleted_posts_count posts." );
+}
+
+/**
+ * Delete posts using wp_delete_post, allows all of the WP hooks to run, but significantly slower than the SQL method.
+ * @param $post_ids array of post_ids to delete
+ *
+ * @return int number of deleted posts
+ */
+function delete_posts_wp( $post_ids ) {
+	$deleted_posts_count = 0;
+	foreach( $post_ids as $post_id ) {
+		var_dump( $post_id );die();
+		$deleted_post = wp_delete_post( $post_id, true );
+		if ( false !== $deleted_post ) {
+			\WP_CLI::line( "Deleted post with ID $post_id, type {$deleted_post->post_type}, title {$deleted_post->post_title}" );
+			$deleted_posts_count++;
+		}
+	}
+	return $deleted_posts_count;
+}
+
+/**
+ * Delete posts using raw SQL queries, doesn't run any WP hooks or handle any custom tables, but is significantly faster than the wp_delete_post method.
+ * @param $post_ids array of post_ids to delete
+ *
+ * @return int number of deleted posts
+ */
+function delete_posts_sql( $post_ids_to_delete, $keep_ids ) {
+	global $wpdb;
+	$chunked_post_ids = array_chunk( $post_ids_to_delete, 500 ); // Process 500 posts at a time;
+	$page_processed = 0;
+	foreach ( $chunked_post_ids as $post_ids ) {
+		$post_ids_as_string = implode( ",", $post_ids );
+		$keep_ids_as_string = implode( ",", $keep_ids );
+		// $query = "delete wp_posts, wp_term_relationships, wp_postmeta from wp_posts, wp_term_relationships, wp_postmeta where ( wp_posts.ID in ( $post_ids_as_string ) or ( wp_posts.post_parent in ( $post_ids_as_string ) and post_type in ('revision', 'attachment') ) ) and ( wp_posts.ID = wp_term_relationships.object_id ) and ( wp_posts.ID = wp_postmeta.post_id )";
+		$query = "delete wp_posts, wp_term_relationships, wp_postmeta from wp_posts left join wp_term_relationships ON ( wp_posts.ID = wp_term_relationships.object_id ) left join wp_postmeta ON (wp_posts.ID = wp_postmeta.post_id ) where ( wp_posts.ID in ( $post_ids_as_string ) and wp_posts.ID not in ( $keep_ids_as_string) ) or ( wp_posts.post_parent in ( $post_ids_as_string ) and wp_posts.post_parent not in ( $keep_ids_as_string ) )";
+		if ( $wpdb->query( $query) > 0 ) {
+			$progress = intval( 100 * ( ++ $page_processed / count( $chunked_post_ids ) ), 10 );
+			\WP_CLI::line( "Posts deleted, progress = {$progress}%");
+		}
+	}
+	return count( $post_ids_to_delete );
 }
 
 add_action( 'wp_sweep_run_prune_posts', __NAMESPACE__ . '\pruner', null, 2 );
