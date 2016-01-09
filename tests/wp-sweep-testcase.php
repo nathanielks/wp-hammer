@@ -57,6 +57,16 @@ class WP_SweepTestCase extends WP_UnitTestCase {
 		);
 
 		$this->author1_page2 = wp_insert_post( $page );
+
+		$args = array(
+				"-l",
+				"users=5,posts=100.post_date",
+				"-f",
+				"posts.post_author=random,users.user_pass=auto,users.user_email=ivan+__ID__@kruchkoff.com,posts.post_title=ipsum",
+		);
+		$assoc_args = array();
+		$this->settings = new WP_CLI\Sweep\Settings();
+		$this->settings->parse_arguments( $args, $assoc_args );
 	}
 
 	public function tearDown() {
