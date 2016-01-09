@@ -13,6 +13,10 @@ class Prune {
 		$this->parse_prunes( $prunes );
 	}
 
+	function get_prunes() {
+		return $this->prunes;
+	}
+
 	function parse_prunes( $prunes ) {
 		$this->prunes = array();
 		foreach( $prunes as $prune ) {
