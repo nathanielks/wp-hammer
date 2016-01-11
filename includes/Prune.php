@@ -40,6 +40,9 @@ class Prune {
 	}
 
 	function run() {
+		/**
+		 * Any code that needs to be run to setup the pruning.
+		 */
 		do_action( 'wp_sweep_before_run_prunes' );
 		WP_CLI::line( "Running content limiters" );
 		foreach ( $this->prunes as $table => $prune )     {
@@ -47,6 +50,9 @@ class Prune {
 				WP_CLI::line( "Dry run prune for $table" );
 			} else {
 				WP_CLI::line( "Limit run for table: $table" );
+				/**
+				 * Any code that needs to be run prior to pruning a table.
+				 */
 				do_action( 'wp_sweep_run_prune_' . $table, $prune[ 'prune' ], $prune[ 'sort_type' ] );
 			}
 

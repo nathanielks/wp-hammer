@@ -8,11 +8,11 @@ class Settings {
 	/**
 	 * @var array of tables and columns which should have their content modified, and HOW it should be modified.
 	 * Specified via -f parameter and comma-separated.
-	 *            e.g. array(
-	 *              "posts.post_author=random", // randomly assign post author to each post
-	 *              "posts.post_title=ipsum", // Use lorem ipsum to generate post titles
-	 *              "user_pass=auto", // Auto generate user passwords for all remaining users
-	 *            );
+	 * e.g. array(
+	 *   "posts.post_author=random", // randomly assign post author to each post
+	 *   "posts.post_title=ipsum", // Use lorem ipsum to generate post titles
+	 *   "user_pass=auto", // Auto generate user passwords for all remaining users
+	 * );
 	 * The table content formatters are specified in the /generators/ folder, /generators/users.php will handle users table etc.
 	 *
 	 */
@@ -20,12 +20,12 @@ class Settings {
 
 	/**
 	 * @var array of tables, how many rows should remain in them, and (optional) how we should determine which rows to keep.
-	 *            These are specified via -l parameter.
+	 * These are specified via -l parameter.
 	 *
-	 *            e.g. array(
-	 *              "users=5", // keep 5 rows of users table
-	 *              "posts=100.post_date", // keep 100 posts, using the latest post_date to determine which remain, and which go.
-	 *            );
+	 * e.g. array(
+	 *   "users=5", // keep 5 rows of users table
+	 *   "posts=100.post_date", // keep 100 posts, using the latest post_date to determine which remain, and which go.
+	 * );
 	 * These limits are processed by the pruners, pruners/users.php will handle the users table etc.
 	 */
 	public $limits;
@@ -64,9 +64,15 @@ class Settings {
 	 * @return mixed
 	 */
 	function parse_argument( $args, $property ) {
+		/**
+		 * Actions to run before parsing a particular property.
+		 */
 		do_action( 'wp_sweep_before_parse_argument_' . $property, $args );
 		if ( property_exists( $this, $property ) && count( $args ) && '-' !== substr( $args[0], 0, 1 ) ) {
 			$arg_values = explode( ',', array_shift( $args ) );
+			/*
+			 * Filter called to allow the parsed argument, can be used in combination with a pruner/formatter for custom functionality.
+			 */
 			$this->{ "$property" } = apply_filters( 'wp_sweep_argument_' . $property, array_unique( array_merge_recursive( (array) $this->{ "$property" }, $arg_values ) ) );
 		}
 		return $this->{ "$property" };

@@ -47,6 +47,9 @@ class ContentFormatter {
 	 * Process all generator actions.
 	 */
 	function run() {
+		/**
+		 * Any setup we want to do before running the formatters.
+		 */
 		do_action( 'wp_sweep_before_run_formatter' );
 		WP_CLI::line( "Running content formatters" );
 		foreach ( $this->formatters as $table => $formatters )     {
@@ -54,9 +57,18 @@ class ContentFormatter {
 				WP_CLI::line( "Dry run formatter $table" );
 			} else {
 				WP_CLI::line( "Running formatters for table: $table" );
+				/**
+				 * Any formatter actions to run for the table type, use this to specify the functionality for a custom table.
+				 */
 				do_action( 'wp_sweep_run_formatter_' . $table, $this->formatters );
 				$columns = array_keys( $formatters );
 				foreach ( $columns as $column ) {
+					/**
+					 *
+					 * Any formatter action just for a specific column, won't necessary override default functionality
+					 * since that's specified via the table action.
+					 *
+					 */
 					do_action( 'wp_sweep_run_formatter_' . $table . '_' . $column , $formatters[ $column ] );
 				}
 			}
