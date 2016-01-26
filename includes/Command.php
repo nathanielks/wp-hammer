@@ -38,9 +38,20 @@ class Command extends CommandWithDBObject {
 	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>] [<--dry-run>]
 	 */
 	function __invoke( $args = array(), $assoc_args = array() ) {
+		ob_end_flush();
+		// All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
+		// the autoloader for them.
+		// Also, because they need add_action/add_filter to load, we can only include them after WP has loaded, so it's not part of the autoloader.
+		$content_manipulators = glob( __DIR__ . '/{pruners,formatters,generators}/*.php', GLOB_BRACE);
+
+		foreach ( $content_manipulators as $content_manipulator ) {
+			require_once $content_manipulator;
+		}
+
 		$this->settings = new Settings();
 		$this->settings->parse_arguments( $args, $assoc_args );
 		$this->run();
+		ob_start();
 
 	}
 
@@ -48,7 +59,6 @@ class Command extends CommandWithDBObject {
 	 * Execute the WP Sweep command.
 	 */
 	function run() {
-		ob_end_flush();
 		global $wpdb;
 		if ( $this->settings->dry_run ) {
 			WP_CLI::line( 'Dry run enabled, not modifying the database' );
@@ -61,7 +71,6 @@ class Command extends CommandWithDBObject {
 			$formats = new ContentFormatter( $this->settings->formats, $this->settings->dry_run );
 			$formats->run();
 		}
-		ob_start();
 	}
 }
 
