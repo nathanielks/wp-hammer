@@ -16,7 +16,7 @@ class SettingsTest extends WP_SweepTestCase {
      */
     public function testFormats() {
         $this->assertEquals( 4, count( $this->settings->formats ), 'Valid Format Count' );
-        $this->assertEquals( 'posts.post_author=random', $this->settings->formats[0], 'Valid table.column=type parse');
+        $this->assertEquals( 'posts.post_author=auto', $this->settings->formats[0], 'Valid table.column=type parse');
         $this->assertEquals( 'users.user_email=ivan+__ID__@kruchkoff.com', $this->settings->formats[2], 'Valid users.user_email=email@format parse' );
     }
 

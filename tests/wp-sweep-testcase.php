@@ -62,7 +62,7 @@ class WP_SweepTestCase extends WP_UnitTestCase {
 				"-l",
 				"users=5,posts=100.post_date",
 				"-f",
-				"posts.post_author=random,users.user_pass=auto,users.user_email=ivan+__ID__@kruchkoff.com,posts.post_title=ipsum",
+				"posts.post_author=auto,users.user_pass=auto,users.user_email=ivan+__ID__@kruchkoff.com,posts.post_title=ipsum",
 		);
 		$assoc_args = array();
 		$this->settings = new WP_CLI\Sweep\Settings();
