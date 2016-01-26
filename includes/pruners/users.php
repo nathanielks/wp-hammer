@@ -7,6 +7,7 @@ namespace WP_CLI\Sweep\Pruners\Users;
  * @param bool|false $sort_type  How to determine which users to keep
  */
 function pruner( $limit, $sort_type = false ) {
+	$limit = absint( $limit );
 	\WP_CLI::line( "Fetching all users for removing all but $limit. This could take a while." );
 	$roles = array_keys( get_editable_roles() );
 	$user_ids_by_role = array();
