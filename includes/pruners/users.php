@@ -18,6 +18,10 @@ function pruner( $limit, $sort_type = false ) {
 			$user_ids_by_role[ $role ] = $users->results;
 		}
 	}
+	$all_users = new \WP_User_Query( array( 'role' => '', 'fields' => 'ID' ) );
+	$no_role_users =  $all_users->total_users ? array_diff( $all_users->results, call_user_func_array( 'array_merge', $user_ids_by_role ) ) : array();
+	$total_users += count( $no_role_users );
+	$user_ids_by_role[ 'none' ] = $no_role_users;
 
 	if ( $total_users < $limit ) {
 		\WP_CLI::line( "Total users $total_users is less than the limit of $limit, no users removed." );
