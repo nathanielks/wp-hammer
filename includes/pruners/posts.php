@@ -12,7 +12,8 @@ function pruner( $limit, $sort_type = false ) {
 	$post_ids_by_type = array();
 	$post_ids = array();
 	\WP_CLI::line( "Fetching all posts, we will only keep $limit of them. This could take a while." );
-	$posts_query = apply_filters( 'wp_sweep_prune_posts_query', "SELECT ID,post_type FROM {$wpdb->prefix}posts order by post_modified DESC" );
+	$posts_query = apply_filters( 'wp_sweep_prune_posts_query', "SELECT ID,post_type,post_parent FROM {$wpdb->prefix}posts order by post_modified DESC" );
+	$post_parent_relationships = array();
 	$posts = new Query( $posts_query );
 	$total_posts = 0;
 	while ( $posts->valid() ) {
@@ -24,27 +25,44 @@ function pruner( $limit, $sort_type = false ) {
 			$post_ids_by_type[ $post_type ] = isset( $post_ids_by_type[ $post_type ] ) ? $post_ids_by_type[ $post_type ] : array();
 			$post_ids_by_type[ $post_type ][] = $post_id;
 		}
+		// Store the post parent in a separate array so we can keep the post parent and not worry about re-assigning any parent IDs
+		if ( $post->post_parent ) {
+			$post_parent_relationships[ $post_id ] = $post->post_parent;
+		}
 		$post_ids[] = $post_id;
 		$posts->next();
 	}
+	\WP_CLI::line( "Total number of posts is $total_posts posts" );
 
 	// Post IDs to keep
 	$keep_ids = array();
 	$remaining = (int) min( $limit, $total_posts );
 	while ( $remaining ) {
-		// Iterate post_types, keeping one more of each until we've hit our
+		// Iterate post_types, keeping one more of each until we've hit our limits
 		foreach ( $post_ids_by_type as $type => &$ids ) {
 			$keep_id = array_shift( $ids );
 			if ( ! is_null( $keep_id ) && ! in_array( $keep_id, $keep_ids ) ) {
-				$keep_ids[] = $keep_id;
-				$remaining--;
+				$parent_id = isset( $post_parent_relationships[ $keep_id ] ) ? $post_parent_relationships[ $keep_id ] : false;
+				// Keep the post parent if it exists, and then if we have space, keep the post itself.
+				if ( $parent_id && ! in_array( $parent_id, $keep_ids ) ) {
+					$keep_ids[] = $parent_id;
+					$remaining--;
+				}
 				if ( 0 === $remaining ) {
 					break;
+				}
+
+				if ( ! in_array( $keep_id, $keep_ids ) ) {
+					$keep_ids[] = $keep_id;
+					$remaining--;
+
+					if ( 0 === $remaining ) {
+						break;
+					}
 				}
 			}
 		}
 	}
-
 
 	\WP_CLI::line( "Deleting " . ( max( $total_posts - $limit, 0 ) ) . " posts" );
 	$post_ids_to_delete = array_diff( $post_ids, $keep_ids );
@@ -65,7 +83,6 @@ function pruner( $limit, $sort_type = false ) {
 function delete_posts_wp( $post_ids ) {
 	$deleted_posts_count = 0;
 	foreach( $post_ids as $post_id ) {
-		var_dump( $post_id );die();
 		$deleted_post = wp_delete_post( $post_id, true );
 		if ( false !== $deleted_post ) {
 			\WP_CLI::line( "Deleted post with ID $post_id, type {$deleted_post->post_type}, title {$deleted_post->post_title}" );
@@ -83,17 +100,10 @@ function delete_posts_wp( $post_ids ) {
  */
 function delete_posts_sql( $post_ids_to_delete, $keep_ids ) {
 	global $wpdb;
-	$chunked_post_ids = array_chunk( $post_ids_to_delete, 500 ); // Process 500 posts at a time;
-	$page_processed = 0;
-	foreach ( $chunked_post_ids as $post_ids ) {
-		$post_ids_as_string = implode( ",", $post_ids );
-		$keep_ids_as_string = implode( ",", $keep_ids );
-		// $query = "delete wp_posts, wp_term_relationships, wp_postmeta from wp_posts, wp_term_relationships, wp_postmeta where ( wp_posts.ID in ( $post_ids_as_string ) or ( wp_posts.post_parent in ( $post_ids_as_string ) and post_type in ('revision', 'attachment') ) ) and ( wp_posts.ID = wp_term_relationships.object_id ) and ( wp_posts.ID = wp_postmeta.post_id )";
-		$query = "delete wp_posts, wp_term_relationships, wp_postmeta from wp_posts left join wp_term_relationships ON ( wp_posts.ID = wp_term_relationships.object_id ) left join wp_postmeta ON (wp_posts.ID = wp_postmeta.post_id ) where ( wp_posts.ID in ( $post_ids_as_string ) and wp_posts.ID not in ( $keep_ids_as_string) ) or ( wp_posts.post_parent in ( $post_ids_as_string ) and wp_posts.post_parent not in ( $keep_ids_as_string ) )";
-		if ( $wpdb->query( $query) > 0 ) {
-			$progress = intval( 100 * ( ++ $page_processed / count( $chunked_post_ids ) ), 10 );
-			\WP_CLI::line( "Posts deleted, progress = {$progress}%");
-		}
+	$keep_ids_as_string = implode( ",", $keep_ids );
+	$query = "delete {$wpdb->prefix}posts, {$wpdb->prefix}term_relationships, {$wpdb->prefix}postmeta from {$wpdb->prefix}posts left join {$wpdb->prefix}term_relationships ON ( {$wpdb->prefix}posts.ID = {$wpdb->prefix}term_relationships.object_id ) left join {$wpdb->prefix}postmeta ON ({$wpdb->prefix}posts.ID = {$wpdb->prefix}postmeta.post_id ) where ( {$wpdb->prefix}posts.ID not in ( $keep_ids_as_string) )";
+	if ( $wpdb->query( $query) > 0 ) {
+		\WP_CLI::line( "Posts deleted, progress = 100%");
 	}
 	return count( $post_ids_to_delete );
 }
