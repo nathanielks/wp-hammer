@@ -12,7 +12,8 @@ function pruner( $limit, $sort_type = false ) {
 	$post_ids_by_type = array();
 	$post_ids = array();
 	\WP_CLI::line( "Fetching all posts, we will only keep $limit of them. This could take a while." );
-	$posts_query = apply_filters( 'wp_sweep_prune_posts_query', "SELECT ID,post_type,post_parent FROM {$wpdb->prefix}posts order by post_modified DESC" );
+	$sort_column = false !== $sort_type ? preg_replace( '/[^A-Za-z0-9_]/', '', $sort_type ) : 'post_modified'; // Alpha-numeric sort type to prevent injections.
+	$posts_query = apply_filters( 'wp_sweep_prune_posts_query', "SELECT ID,post_type,post_parent FROM {$wpdb->prefix}posts order by $sort_column DESC" );
 	$post_parent_relationships = array();
 	$posts = new Query( $posts_query );
 	$total_posts = 0;
