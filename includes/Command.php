@@ -26,9 +26,6 @@ class Command extends CommandWithDBObject {
 	 * [-l <limit1>,<limit2>,...<limitN>]
 	 * : Which tables to limit, the maximum number of rows to keep and the method of determining which rows to keep.
 	 *
-	 * [--dry-run]
-	 * : Whether or not we actually make any changes to the database.
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp sweep -l users=5
@@ -38,6 +35,10 @@ class Command extends CommandWithDBObject {
 	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>] [<--dry-run>]
 	 */
 	function __invoke( $args = array(), $assoc_args = array() ) {
+		if ( ! count( $args ) && ! count( $assoc_args ) ) {
+			$this->show_usage();
+			return;
+		}
 		ob_end_flush();
 		// All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
 		// the autoloader for them.
@@ -71,6 +72,15 @@ class Command extends CommandWithDBObject {
 			$formats = new ContentFormatter( $this->settings->formats, $this->settings->dry_run );
 			$formats->run();
 		}
+	}
+
+	function show_usage() {
+		\WP_CLI::line( "usage: wp sweep -f <format1>,<format2>,...<formatN>" );
+		\WP_CLI::line( "   or: wp sweep -l <limit1>,<limit2>,...<limitN>" );
+		\WP_CLI::line( "   or: wp sweep -l <limit1>,...<limitN> -f <format1>,...<formatN>" );
+		\WP_CLI::line( "" );
+		\WP_CLI::line( "See 'wp help sweep' for more information on usage." );
+
 	}
 }
 
