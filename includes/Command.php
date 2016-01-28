@@ -30,9 +30,9 @@ class Command extends CommandWithDBObject {
 	 *
 	 *     wp sweep -l users=5
 	 *     wp sweep -f posts.post_author=random,users.user_pass=auto,users.user_email='test+user__ID__@example.com'
-	 *     wp sweep --dry-run -f posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
+	 *     wp sweep -f posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
 	 *
-	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>] [<--dry-run>]
+	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>]
 	 */
 	function __invoke( $args = array(), $assoc_args = array() ) {
 		if ( ! count( $args ) && ! count( $assoc_args ) ) {
