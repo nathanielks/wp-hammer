@@ -1,13 +1,10 @@
 Before you do anything, composer install, to fetch the dependencies
 
 Usage is best explained with an example, which we'll break down in parts as the syntax is fairly powerful
-wp sweep --dry-run -f posts.post_author=auto,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
+wp sweep -f posts.post_author=auto,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
 
 wp sweep
 How you invoke the command
-
---dry-run
-Output what we're going to do, without making any changes.
 
 Format
 -f posts.post_author=auto users.user_pass=__user_email__UMINtHeroJEreAGleC users.user_email='ivank+__ID__@10up.com' posts.post_title=ipsum posts.post_content=markov
