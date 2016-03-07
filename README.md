@@ -1,3 +1,20 @@
+#WP Sweep
+``wp sweep`` is created to help you sweep up your environment of personally identifiable information and extra content that is not necessary. 
+
+## WARNING ##
+__WARNING__ All changes are final and modify your site DB. Make sure you take a backup of your database __BEFORE__ you play around with the tool ``wp db export``
+
+## ABOUT ##
+
+This tool will help you work on a client's site without having to worry about any of their user's personal information (emails, post content etc) being hosted on your dev environment.
+
+With ``wp sweep`` you can:
+
+  *  Clean up user emails. ``wp sweep -f users.user_email='ivan.k+__ID__@10up.com``
+  *  Clean up user passwords. ``wp sweep -f users.user_pass=auto``
+  *  Replace posts with dummy posts. ``wp sweep -f posts.post_content=markov``
+  *  Remove extra users. `` wp sweep -l users=10``
+
 Before you do anything, composer install, to fetch the dependencies
 
 Usage is best explained with an example, which we'll break down in parts as the syntax is fairly powerful
@@ -27,3 +44,5 @@ Another example
 wp db import production.sql
 wp sweep posts.post_author=auto,users.user_pass=XGRwPjb7uFD5de23,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10
 wp db export sweep.sql
+
+Created by Ivan Kruchkoff 
