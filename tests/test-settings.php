@@ -1,6 +1,6 @@
 <?php
 
-class SettingsTest extends WP_SweepTestCase {
+class SettingsTest extends WP_HammerTestCase {
     protected $settings;
 
     /**

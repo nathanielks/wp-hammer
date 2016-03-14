@@ -9,10 +9,9 @@ require_once $_tests_dir . '/includes/functions.php';
 
 function _manually_load_plugin() {
 	require_once getcwd() . '/vendor/autoload.php';
-	//require dirname( __FILE__ ) . '/../wp-sweep.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 require $_tests_dir . '/includes/bootstrap.php';
 
-require dirname( __FILE__ ) . '/wp-sweep-testcase.php';
+require dirname( __FILE__ ) . '/wp-hammer-testcase.php';

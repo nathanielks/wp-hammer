@@ -4,7 +4,7 @@
  * Base unit test class for Co-Authors Plus
  */
 
-class WP_SweepTestCase extends WP_UnitTestCase {
+class WP_HammerTestCase extends WP_UnitTestCase {
 
 	protected $suppress = false;
 
@@ -65,7 +65,7 @@ class WP_SweepTestCase extends WP_UnitTestCase {
 				"posts.post_author=auto,users.user_pass=auto,users.user_email=ivan+__ID__@kruchkoff.com,posts.post_title=ipsum",
 		);
 		$assoc_args = array();
-		$this->settings = new WP_CLI\Sweep\Settings();
+		$this->settings = new WP_CLI\Hammer\Settings();
 		$this->settings->parse_arguments( $args, $assoc_args );
 	}
 

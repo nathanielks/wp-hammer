@@ -1,5 +1,5 @@
-#WP Sweep
-``wp sweep`` is created to help you sweep up your environment of personally identifiable information and extra content that is not necessary. 
+#WP Hammer
+``wp ha`` is created to help you sweep up your environment of personally identifiable information and extra content that is not necessary.
 
 ## WARNING ##
 __WARNING__ All changes are final and modify your site DB. Make sure you take a backup of your database __BEFORE__ you play around with the tool ``wp db export``
@@ -8,24 +8,24 @@ __WARNING__ All changes are final and modify your site DB. Make sure you take a 
 
 This tool will help you work on a client's site without having to worry about any of their user's personal information (emails, post content etc) being hosted on your dev environment.
 
-With ``wp sweep`` you can:
+With ``wp ha`` you can:
 
-  *  Clean up user emails. ``wp sweep -f users.user_email='ivan.k+__ID__@10up.com``
-  *  Clean up user passwords. ``wp sweep -f users.user_pass=auto``
-  *  Replace posts with dummy posts. ``wp sweep -f posts.post_content=markov``
-  *  Remove extra users. `` wp sweep -l users=10``
+  *  Clean up user emails. ``wp ha -f users.user_email='ivan.k+__ID__@10up.com``
+  *  Clean up user passwords. ``wp ha -f users.user_pass=auto``
+  *  Replace posts with dummy posts. ``wp ha -f posts.post_content=markov``
+  *  Remove extra users. `` wp ha -l users=10``
 
 Before you do anything, composer install, to fetch the dependencies
 
 Usage is best explained with an example, which we'll break down in parts as the syntax is fairly powerful
-wp sweep -f posts.post_author=auto,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
+wp ha -f posts.post_author=auto,users.user_pass=auto,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
 
-wp sweep
+wp ha
 How you invoke the command
 
 ### Format
 `
-wp sweep -f posts.post_author=auto users.user_pass=__user_email__UMINtHeroJEreAGleC users.user_email='ivank+__ID__@10up.com' posts.post_title=ipsum posts.post_content=markov
+wp ha -f posts.post_author=auto users.user_pass=__user_email__UMINtHeroJEreAGleC users.user_email='ivank+__ID__@10up.com' posts.post_title=ipsum posts.post_content=markov
 `
 `posts.post_author` is set to a random user ID (from those that will remain after we've performed any adjustments to the users)
 `users.user_pass` is set to the user email followed by UMINtHeroJEreAGleC
@@ -48,8 +48,8 @@ We keep the following posts:
 ### Another example
 `
 wp db import production.sql &&
-wp sweep posts.post_author=auto,users.user_pass=XGRwPjb7uFD5de23,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10 &&
+wp ha posts.post_author=auto,users.user_pass=XGRwPjb7uFD5de23,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10 &&
 wp db export sweep.sql
 `
 
-Created by Ivan Kruchkoff ( @ivankk on WordPress.org ), @10up
+Created by Ivan Kruchkoff ( @ivankk on WordPress.org ), at 10up.com.
