@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_CLI\Sweep\Formatters\Posts;
+namespace WP_CLI\Hammer\Formatters\Posts;
 use WP_CLI\Iterators\Query;
 
 /**
@@ -16,7 +16,7 @@ function posts( $formatters ) {
 		$modified_post = (array) $posts->current();
 
 		foreach( $formatters['posts'] as $column => $formatter ) {
-			$modified_post = apply_filters( 'wp_sweep_run_formatter_filter_posts_' . $column, $modified_post, $formatter );
+			$modified_post = apply_filters( 'wp_hammer_run_formatter_filter_posts_' . $column, $modified_post, $formatter );
 		}
 
 		$modified = array_diff( $modified_post, $original_post ) ;
@@ -81,23 +81,23 @@ function get_limits( $column ) {
 		),
 	);
 	$return = isset( $defaults[ $column ] ) ? $defaults[ $column ] : $defaults[ 'default' ];
-	return apply_filters( "wp_sweep_run_formatter_post_default_values", $return );
+	return apply_filters( "wp_hammer_run_formatter_post_default_values", $return );
 }
 
 function column_content( $post, $formatter, $column ) {
 	$limits = get_limits( $column );
 	switch ( $formatter ) {
 		case 'ipsum':
-			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\ipsum( $limits[ 'ipsum' ] );
+			$post[ $column ] = \WP_CLI\Hammer\Generators\Generic\ipsum( $limits[ 'ipsum' ] );
 			break;
 		case 'markov':
-			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\markov( $limits[ 'markov' ], 'posts', $column );
+			$post[ $column ] = \WP_CLI\Hammer\Generators\Generic\markov( $limits[ 'markov' ], 'posts', $column );
 			break;
 		case 'random':
-			$post[ $column ] = \WP_CLI\Sweep\Generators\Generic\random( $limits[ 'random' ], $column );
+			$post[ $column ] = \WP_CLI\Hammer\Generators\Generic\random( $limits[ 'random' ], $column );
 			break;
 		default:
-			$post[ $column ] = apply_filters( "wp_sweep_run_formatter_filter_posts_{$column}_{$formatter}", $formatter );
+			$post[ $column ] = apply_filters( "wp_hammer_run_formatter_filter_posts_{$column}_{$formatter}", $formatter );
 
 	}
 	return $post;
@@ -120,7 +120,7 @@ function post_author( $post, $formatter ) {
 	return $post;
 }
 
-add_filter( 'wp_sweep_run_formatter_filter_posts_post_title', __NAMESPACE__ . '\post_title' , null , 2 );
-add_filter( 'wp_sweep_run_formatter_filter_posts_post_content', __NAMESPACE__ . '\post_content' , null , 2 );
-add_filter( 'wp_sweep_run_formatter_filter_posts_post_author', __NAMESPACE__ . '\post_author' , null , 2 );
-add_action( 'wp_sweep_run_formatter_posts', __NAMESPACE__ . '\posts' );
+add_filter( 'wp_hammer_run_formatter_filter_posts_post_title', __NAMESPACE__ . '\post_title' , null , 2 );
+add_filter( 'wp_hammer_run_formatter_filter_posts_post_content', __NAMESPACE__ . '\post_content' , null , 2 );
+add_filter( 'wp_hammer_run_formatter_filter_posts_post_author', __NAMESPACE__ . '\post_author' , null , 2 );
+add_action( 'wp_hammer_run_formatter_posts', __NAMESPACE__ . '\posts' );

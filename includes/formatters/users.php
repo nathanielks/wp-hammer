@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_CLI\Sweep\Formatters\Users;
+namespace WP_CLI\Hammer\Formatters\Users;
 use WP_CLI\Iterators\Query;
 
 /**
@@ -16,7 +16,7 @@ function users( $formatters ) {
 		$modified_user = (array) $users->current();
 
 		foreach( $formatters['users'] as $column => $formatter ) {
-			$modified_user = apply_filters( 'wp_sweep_run_formatter_filter_users_' . $column, $modified_user, $formatter );
+			$modified_user = apply_filters( 'wp_hammer_run_formatter_filter_users_' . $column, $modified_user, $formatter );
 		}
 
 		$modified = array_diff( $modified_user, $original_user ) ;
@@ -75,6 +75,6 @@ function user_pass( $user, $formatter ) {
 	return $user;
 }
 
-add_filter( 'wp_sweep_run_formatter_filter_users_user_email', __NAMESPACE__ . '\user_email', null , 2 );
-add_filter( 'wp_sweep_run_formatter_filter_users_user_pass', __NAMESPACE__ . '\user_pass', null , 2 );
-add_action( 'wp_sweep_run_formatter_users', __NAMESPACE__ . '\users' );
+add_filter( 'wp_hammer_run_formatter_filter_users_user_email', __NAMESPACE__ . '\user_email', null , 2 );
+add_filter( 'wp_hammer_run_formatter_filter_users_user_pass', __NAMESPACE__ . '\user_pass', null , 2 );
+add_action( 'wp_hammer_run_formatter_users', __NAMESPACE__ . '\users' );

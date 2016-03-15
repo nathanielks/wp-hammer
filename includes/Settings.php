@@ -1,5 +1,5 @@
 <?php
-namespace WP_CLI\Sweep;
+namespace WP_CLI\Hammer;
 
 use WP_CLI;
 
@@ -67,13 +67,13 @@ class Settings {
 		/**
 		 * Actions to run before parsing a particular property.
 		 */
-		do_action( 'wp_sweep_before_parse_argument_' . $property, $args );
+		do_action( 'wp_hammer_before_parse_argument_' . $property, $args );
 		if ( property_exists( $this, $property ) && count( $args ) && '-' !== substr( $args[0], 0, 1 ) ) {
 			$arg_values = explode( ',', array_shift( $args ) );
 			/*
 			 * Filter called to allow the parsed argument, can be used in combination with a pruner/formatter for custom functionality.
 			 */
-			$this->{ "$property" } = apply_filters( 'wp_sweep_argument_' . $property, array_unique( array_merge_recursive( (array) $this->{ "$property" }, $arg_values ) ) );
+			$this->{ "$property" } = apply_filters( 'wp_hammer_argument_' . $property, array_unique( array_merge_recursive( (array) $this->{ "$property" }, $arg_values ) ) );
 		}
 		return $this->{ "$property" };
 	}

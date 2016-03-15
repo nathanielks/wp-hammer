@@ -1,5 +1,5 @@
 <?php
-namespace WP_CLI\Sweep;
+namespace WP_CLI\Hammer;
 
 use WP_CLI;
 
@@ -43,7 +43,7 @@ class Prune {
 		/**
 		 * Any code that needs to be run to setup the pruning.
 		 */
-		do_action( 'wp_sweep_before_run_prunes' );
+		do_action( 'wp_hammer_before_run_prunes' );
 		WP_CLI::line( "Running content limiters" );
 		foreach ( $this->prunes as $table => $prune )     {
 			if ( $this->dry_run ) {
@@ -53,7 +53,7 @@ class Prune {
 				/**
 				 * Any code that needs to be run prior to pruning a table.
 				 */
-				do_action( 'wp_sweep_run_prune_' . $table, $prune[ 'prune' ], $prune[ 'sort_type' ] );
+				do_action( 'wp_hammer_run_prune_' . $table, $prune[ 'prune' ], $prune[ 'sort_type' ] );
 			}
 
 		}

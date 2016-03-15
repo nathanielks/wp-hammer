@@ -1,14 +1,14 @@
 <?php
 
-namespace WP_CLI\Sweep;
+namespace WP_CLI\Hammer;
 
 use WP_CLI;
 use WP_CLI\CommandWithDBObject;
-use WP_CLI\Sweep\Prune;
-use WP_CLI\Sweep\ContentFormatter;
+use WP_CLI\Hammer\Prune;
+use WP_CLI\Hammer\ContentFormatter;
 
 /**
- * wp sweep is a command to sweep your environment and prepare it for a staging / development environment.
+ * wp hammer is a command to clean your environment of personally identifiable information, remove extra content and prepare it for a staging / development environment.
  *
  */
 class Command extends CommandWithDBObject {
@@ -16,7 +16,7 @@ class Command extends CommandWithDBObject {
 	protected $settings;
 
 	/**
-	 * Clean up your site to remove data such as password hashes and email addresses.
+	 * Clean your site to change passwords, email addresses and remove unneeded posts.
 	 *
 	 * ## OPTIONS
 	 *
@@ -28,9 +28,9 @@ class Command extends CommandWithDBObject {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp sweep -l users=5
-	 *     wp sweep -f posts.post_author=random,users.user_pass=auto,users.user_email='test+user__ID__@example.com'
-	 *     wp sweep -f posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
+	 *     wp hammer -l users=5
+	 *     wp hammer -f posts.post_author=random,users.user_pass=auto,users.user_email='test+user__ID__@example.com'
+	 *     wp hammer -f posts.post_title=ipsum,posts.post_content=markov -l users=10,posts=100.post_date
 	 *
 	 * @synopsis [<-f>] [<formats>] [<-l>] [<limits>]
 	 */
@@ -57,7 +57,7 @@ class Command extends CommandWithDBObject {
 	}
 
 	/**
-	 * Execute the WP Sweep command.
+	 * Execute the WP Hammer command.
 	 */
 	function run() {
 		global $wpdb;
@@ -75,11 +75,11 @@ class Command extends CommandWithDBObject {
 	}
 
 	function show_usage() {
-		\WP_CLI::line( "usage: wp sweep -f <format1>,<format2>,...<formatN>" );
-		\WP_CLI::line( "   or: wp sweep -l <limit1>,<limit2>,...<limitN>" );
-		\WP_CLI::line( "   or: wp sweep -l <limit1>,...<limitN> -f <format1>,...<formatN>" );
+		\WP_CLI::line( "usage: wp hammer -f <format1>,<format2>,...<formatN>" );
+		\WP_CLI::line( "   or: wp hammer -l <limit1>,<limit2>,...<limitN>" );
+		\WP_CLI::line( "   or: wp hammer -l <limit1>,...<limitN> -f <format1>,...<formatN>" );
 		\WP_CLI::line( "" );
-		\WP_CLI::line( "See 'wp help sweep' for more information on usage." );
+		\WP_CLI::line( "See 'wp help hammer' for more information on usage." );
 
 	}
 }

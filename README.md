@@ -1,5 +1,5 @@
 #WP Hammer
-``wp ha`` is created to help you sweep up your environment of personally identifiable information and extra content that is not necessary.
+``wp ha`` is a multi-tool. You can use it to clean your environment of personally identifiable information and extra content (posts and users) that are not necessary.
 
 ## WARNING ##
 __WARNING__ All changes are final and modify your site DB. Make sure you take a backup of your database __BEFORE__ you play around with the tool ``wp db export``
@@ -10,10 +10,22 @@ This tool will help you work on a client's site without having to worry about an
 
 With ``wp ha`` you can:
 
-  *  Clean up user emails. ``wp ha -f users.user_email='ivan.k+__ID__@10up.com``
-  *  Clean up user passwords. ``wp ha -f users.user_pass=auto``
-  *  Replace posts with dummy posts. ``wp ha -f posts.post_content=markov``
-  *  Remove extra users. `` wp ha -l users=10``
+### Clean up user emails. ###
+``wp ha -f users.user_email='ivan.k+__ID__@10up.com``
+
+### Clean up user passwords. ###
+``wp ha -f users.user_pass=auto``
+``wp ha -f users.user_pass=__ID__foopassword``
+
+### Replace posts with dummy posts. ###
+``wp ha -f posts.post_content=markov,posts.post_title=random``
+
+### Remove extra users. ###
+`` wp ha -l users=10``
+
+### Remove extra Posts. ###
+`` wp ha -l post=100``
+
 
 Before you do anything, composer install, to fetch the dependencies
 
@@ -49,7 +61,7 @@ We keep the following posts:
 `
 wp db import production.sql &&
 wp ha posts.post_author=auto,users.user_pass=XGRwPjb7uFD5de23,users.user_email='ivan.k+__ID__@10up.com',posts.post_title=ipsum,posts.post_content=markov -l users=10 &&
-wp db export sweep.sql
+wp db export hammer.sql
 `
 
 Created by Ivan Kruchkoff ( @ivankk on WordPress.org ), at 10up.com.

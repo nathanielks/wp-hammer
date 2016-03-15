@@ -1,5 +1,5 @@
 <?php
-namespace WP_CLI\Sweep;
+namespace WP_CLI\Hammer;
 
 use WP_CLI;
 
@@ -50,7 +50,7 @@ class ContentFormatter {
 		/**
 		 * Any setup we want to do before running the formatters.
 		 */
-		do_action( 'wp_sweep_before_run_formatter' );
+		do_action( 'wp_hammer_before_run_formatter' );
 		WP_CLI::line( "Running content formatters" );
 		foreach ( $this->formatters as $table => $formatters )     {
 			if ( $this->dry_run ) {
@@ -60,7 +60,7 @@ class ContentFormatter {
 				/**
 				 * Any formatter actions to run for the table type, use this to specify the functionality for a custom table.
 				 */
-				do_action( 'wp_sweep_run_formatter_' . $table, $this->formatters );
+				do_action( 'wp_hammer_run_formatter_' . $table, $this->formatters );
 				$columns = array_keys( $formatters );
 				foreach ( $columns as $column ) {
 					/**
@@ -69,7 +69,7 @@ class ContentFormatter {
 					 * since that's specified via the table action.
 					 *
 					 */
-					do_action( 'wp_sweep_run_formatter_' . $table . '_' . $column , $formatters[ $column ] );
+					do_action( 'wp_hammer_run_formatter_' . $table . '_' . $column , $formatters[ $column ] );
 				}
 			}
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_CLI\Sweep\Pruners\Users;
+namespace WP_CLI\Hammer\Pruners\Users;
 
 /**
  * @param            $limit      How many users to keep
@@ -63,4 +63,4 @@ function pruner( $limit, $sort_type = false ) {
 
 }
 
-add_action( 'wp_sweep_run_prune_users', __NAMESPACE__ . '\pruner' );
+add_action( 'wp_hammer_run_prune_users', __NAMESPACE__ . '\pruner' );

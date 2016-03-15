@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_CLI\Sweep\Generators\Generic;
+namespace WP_CLI\Hammer\Generators\Generic;
 use WP_CLI\Iterators\Query;
 use joshtronic\LoremIpsum;
 use PWGen;
@@ -63,7 +63,7 @@ function markov( $length, $table, $column ) {
  * @return string content of the column in the table
  */
 function get_content_for_table_column( $table, $column ) {
-	$transient_key = "wp_sweep_table_content_{$table}_{$column}";
+	$transient_key = "wp_hammer_table_content_{$table}_{$column}";
 	$content = get_transient( $transient_key );
 	if ( false === $content ) {
 		global $wpdb;

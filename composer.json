@@ -1,6 +1,6 @@
 {
-    "name": "ivankruchkoff/wp-sweep",
-    "description": "WP CLI Command to sanitize an environment for dev/test/stage purposes",
+    "name": "ivankruchkoff/wp-hammer",
+    "description": "WP CLI Hammer Command to remove personally identifiable information and extra content for dev/test/stage purposes",
     "require": {
         "joshtronic/php-loremipsum": "dev-master",
         "roderik/pwgen-php": "dev-master",
@@ -8,9 +8,9 @@
     },
     "autoload": {
         "psr-4": {
-            "WP_CLI\\Sweep\\": "includes/"
+            "WP_CLI\\Hammer\\": "includes/"
         },
-        "files": [ "wp-sweep.php" ]
+        "files": [ "wp-hammer.php" ]
     },
     "license": "GPL-2.0+",
     "authors": [
