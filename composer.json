@@ -16,7 +16,8 @@
     "authors": [
         {
             "name": "Ivan Kruchkoff",
-            "email": "ivan@kruchkoff.com"
+            "email": "ivan@kruchkoff.com",
+            "homepage": "https://github.com/ivankruchkoff"
         }
     ]
 }
