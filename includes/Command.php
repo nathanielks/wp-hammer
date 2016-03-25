@@ -39,7 +39,9 @@ class Command extends CommandWithDBObject {
 			$this->show_usage();
 			return;
 		}
-		ob_end_flush();
+		while ( ob_get_level() > 0 ) {
+			ob_end_flush();
+		}
 		// All content manipulators are stored in pruners, formatters, generators folders. They are namespaced, but not in classes, so we can't use
 		// the autoloader for them.
 		// Also, because they need add_action/add_filter to load, we can only include them after WP has loaded, so it's not part of the autoloader.
