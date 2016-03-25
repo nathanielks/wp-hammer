@@ -17,7 +17,7 @@ if ( ! class_exists('WP_CLI\Hammer\Command') ) {
 	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 		require_once __DIR__ . '/vendor/autoload.php';
 	} else {
-		die( "Please, run composer install first" );
+		WP_CLI::error( "Please, run composer install first" );
 	}
 }
 
